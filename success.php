@@ -10,7 +10,16 @@
         $email = $_POST['email'];
         $contact = $_POST['phone'];
         $specialty = $_POST['specialty'];
-        $isSuccess = $crud->insertAttendees($fname, $lname, $dob, $email, $contact, $specialty);
+
+        $orig_file = $_FILES["avatar"]["tmp_name"];
+        $ext = pathinfo($_FILES["avatar"]["name"], PATHINFO_EXTENSION);
+        $target_dir = 'uploads/';
+        $destination = "$target_dir$contact.$ext";
+        move_uploaded_file($orig_file, $destination);
+
+        // exit();
+
+        $isSuccess = $crud->insertAttendees($fname, $lname, $dob, $email, $contact, $specialty, $destination);
 
         if($isSuccess){
             // echo '<h1 class="text-center text-success">You have been registered!</h1>';
@@ -37,7 +46,7 @@
             </p>
         </div>
     </div> -->
-
+    <img src="<?php echo empty($destination) ? "uploads/blank.png" : $destination ; ?>" class="rounded-circle" style="width: 20%;height: 20%;">
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title"><?php echo $_POST['firstname'] . ' ' . $_POST['lastname'] ?></h5>
